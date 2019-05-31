@@ -1,0 +1,87 @@
+proc rrun(){									// Run the network simulation and write out the results
+
+	pnm.want_all_spikes() 						// Record all spikes of all cells on this machine into the
+												//  vectors pnm.spikevec (spiketimes) and pnm.idvec (gids)
+												
+	local_minimum_delay = pc.set_maxstep(maxstepval)	// Set every machine's max step size to minimum delay of
+												//  all netcons created on pc using pc.gid_connect, but
+												//  not larger than 10
+												
+	stdinit()									// Call the init fcn (which is redefined in this code) and
+												//  then make other standard calls
+
+	runstart = startsw()						// Get the start time of the simulation
+	pc.psolve(tstop)							// Equivalent to calling cvode.solve(tstop) but for parallel NEURON;
+												//  solve will be broken into steps determined by the result of
+												//  set_maxstep
+
+	runtime = startsw() - runstart				// Calculate the time taken to run the simulation
+	
+												// Compute the load balance	of the simulation			
+
+	writestart = startsw()						// Record the time at which the program started writing results
+	
+	comptime = pc.step_time						// Every processor reports its computation time into comptime
+	avgcomp = pc.allreduce(comptime, 1)/pc.nhost	// allreduce with argument 1 returns the average comptime value from all processors
+	maxcomp = pc.allreduce(comptime, 2)				// allreduce with argument 2 returns the maximum comptime value from all processors
+	if (maxcomp>0) {							// Print a summary message to screen
+		if (pc.id == 0) { printf("load_balance = %.3f\n", avgcomp/maxcomp)} 		// Compute and print the load balance
+		if (pc.id == 0) { printf("exchange_time = %.2f ms\n",  runtime - maxcomp) } 	// Compute and print the spike exchange time (all time not spent on computation)
+	} else {
+		if (pc.id == 0) { printf("no load balance info available\nno spike exchange info available\n")}
+	}
+		
+	spikeoutfast()	// Each processor writes out a file "spikeraster_#.dat" where # is the processor. The file contains the spike times (in ms) and spiking cells (by gid) into a file called "spikeraster.dat"
+	
+	timeout()	// Write out a file "runtimes.dat" of run times for each code section
+	
+	highIndexout() 	// Write a file "MaxHighIndex.dat" how much of the random streams this run used, for a statistically independent run,
+					//  start the next run with random seeds that are greater than the maximum number reported in this file
+
+	if (strcmp(Stimulation, "clampthetagamma")==0) {currentout()}	// Write out any currents that were recorded during simulation
+	
+	if (PrintVoltage>0) {voltageout()}			// Write out any voltages that were recorded during simulation
+	
+	sumnumout(runtime)	// Write out the file "sumnumout.dat" with the total number of cells, spikes, and connections in the network
+	writetime = startsw() - writestart				// Calculate write time of program
+	totaltime = startsw() - loadstart				// Calculate total time taken by whole program
+	allottedtime = JobHours*3600					// Calculate total time allotted to program in seconds
+	
+	// Print a summary message of the time taken for each part of the code, as well as the name of the run
+	if (pc.id == 0) {printf("****\nTIME SUMMARY for host 0\nset up in %g seconds\ncreated cells in %g seconds\nconnected cells in %g seconds\nran simulation in %g seconds\nwrote results in %g seconds\nTOTAL TIME   = %g seconds\nALLOTTED TIME = %g seconds\n************\nThis run is called: %s\n************\n", loadtime, createtime, connecttime, runtime, writetime, totaltime, allottedtime, RunName)}
+}
+
+
+objref fihw
+fihw = new FInitializeHandler(2, "midbal()")
+walltime = startsw()
+
+strdef cmd, cmdo
+newtstop = tstop
+warningflag=0
+proc midbal() {local wt, thisstep
+	wt = startsw()
+	if (t>0) {
+		thisstep = wt - walltime
+		simleft = tstop - t
+		compleft = JobHours*3600 - (startsw() - loadstart)
+
+		if (warningflag==0 && (simleft/StepBy*thisstep+EstWriteTime)>compleft && pc.id == 0) {
+			newtstop = int((compleft-EstWriteTime)/thisstep)*StepBy + t
+			print "Not enough time to complete ", tstop,  " ms simulation, simulation will likely stop around ", newtstop, " ms"
+			warningflag=1
+		}
+		if (pc.id == 0) { printf("%g ms interval at t=%g ms was %g s\n", StepBy, t, thisstep) }
+		
+		if ((thisstep+EstWriteTime)>compleft && t<tstop) { // not enough time for another step, end now
+			{pc.barrier()}
+			sprint(cmd,"cat results/%s/runreceipt.txt | sed -e 's/^SimDuration = [^ ]*/SimDuration = %g;/' > x ; mv x results/%s/runreceipt.txt", RunName, t, RunName)
+			if (pc.id == 0) { {system(cmd,cmdo)} }
+			if (pc.id == 0) { print "simulation stopped early at t=", t, " ms"}
+			tstop = t
+			stoprun=1
+		}
+	}
+	walltime = wt
+	cvode.event(t+StepBy, "midbal(0)")
+}

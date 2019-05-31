@@ -1,0 +1,42 @@
+// This file sets the default values of parameters
+//  in such a way that they can be overridden using
+//  certain options at the command line
+ 
+default_var("RunName","none")		// Name of simulation run
+default_var("UID","0")		// Unique ID for this simulation run
+default_var("Stimulation","spontaneous")		// Filename of the stimulation protocol used to stimulate the network
+default_var("Connectivity","try_all_repeatstim")		// Filename of the connection protocol used to connect the cells of the network
+default_var("Scale",1)		// Network scale (1:Scale)
+default_var("SimDuration",5000)		// Duration of time simulated, in milliseconds
+default_var("RandomSeeds",1500000)		// Method used to assign seeds to random processors
+default_var("Positioning","")		// Algorithm used to position the cells
+default_var("PrintVoltage",1)		// Flag for recording and printing intracellular voltage traces for select cells
+default_var("PrintTerminal",1)		// Level of printouts to screen (affects run time) 0: minimal, 1: some, 2: max printouts
+default_var("PrintConnDetails",0)		// Flag for printing the detailed connection matrix
+default_var("PrintCellPositions",1)		// Flag for printing the cell positions
+default_var("PrintConnSummary",1)		// Flag for printing the summary connection matrix
+default_var("TransverseLength",1000)		// Length of the network subfield in the transverse direction in microns
+default_var("LongitudinalLength",6000)		// Length of the network subfield in the longitudinal direction in microns
+default_var("LayerHeights","4;100;50;200;100;")		// Vector of heights of each network subfield layer in microns (from basal to molecular layer)
+default_var("SpatialResolution",100)		// Spatial discretization method or resolution
+default_var("ConnData",193)		// Number of the connection dataset to use
+default_var("SynData",116)		// Number of the synapse kinetics dataset that was used to prepare the cell definition files
+default_var("NumData",109)		// Number of the cells dataset to use
+default_var("TemporalResolution",0.05)		// Temporal resolution of the simulation (in ms)
+default_var("NumTraces",40)		// The maximum number of cells to record intracellularly, for each cell type
+default_var("FracTraces",100)		// The percent of cells to record intracellularly, for each cell type
+default_var("DegreeStim",1.81)		// Degree of stimulation; meaning depends on Stimulation type
+default_var("Onint",0.215)		// Duration of burst (in ms) when burst stimulation is used
+default_var("Offint",0.125)		// Duration of rest interval between bursts (in ms) when burst stimulation is used
+default_var("PercentCellDeath",0)		// Percent of cells that are killed (removed), for cell types flagged for cell death
+default_var("PercentAxonSprouting",0)		// Probability of connection between granule cells, given as a percent of connections to make out of all possible granule cell connections
+default_var("RipStim",0.38)		// Degree of ripple CA3 stimulation; Higher=more
+default_var("CatFlag",0)		// Whether to concatenate and remove trace connection files
+default_var("JobNumber",0)		// Job number assigned by supercomputer
+default_var("TopProc","nrniv")	// NEURON process name
+default_var("RandomSeedsConn",1500000)		// Starting highIndex used by connectivity streams
+default_var("RandomSeedsStim",1500000)		// Starting highIndex used by stimulation streams
+default_var("AxConVel",0)		// Axonal conduction velocity, leave at 0 for a the distance-independent, constant value
+default_var("StepBy",100)		// Every StepBy ms into the simulation, check the remaining time and print a status line
+default_var("JobHours",12)		// How many hours we gave the job to run (for supercomputing jobs)
+default_var("EstWriteTime",660)		// How much real time we expect the computer to require for writing results

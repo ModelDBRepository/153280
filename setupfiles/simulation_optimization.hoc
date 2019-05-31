@@ -1,0 +1,23 @@
+use_cache_efficient=1
+get_spike_hist=0
+use_bin_queue=0
+use_spike_compression=0
+if (use_spike_compression==1) {
+	maxstepval = 2.5
+} else {
+	maxstepval = 10
+}	
+
+{cvode.cache_efficient(use_cache_efficient)} // always double check that this addition does not affect the spikeraster (via pointers in mod files, etc)
+
+if (use_bin_queue==1) {
+	use_fixed_step_bin_queue = 1 // boolean
+	use_self_queue = 0 // boolean - this one may not be helpful for me, i think it's best for large numbers of artificial cells that receive large numbers of inputs
+	{mode = cvode.queue_mode(use_fixed_step_bin_queue, use_self_queue)}
+}
+
+if (use_spike_compression==1) {
+	nspike = 3 // compress spiketimes or not
+	gid_compress = 0 //only works if fewer than 256 cells on each proc
+	{nspike = pc.spike_compress(nspike, gid_compress)}
+}

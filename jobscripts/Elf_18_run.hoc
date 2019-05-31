@@ -1,0 +1,43 @@
+strdef RunName
+RunName="Elf_18"
+strdef UID
+UID="D3C567A0-B2B9-4877-A820-608F23AD493"
+strdef Stimulation
+Stimulation="spontaneous"
+strdef Connectivity
+Connectivity="try_all_repeatstim"
+Scale=1
+SimDuration=5000
+RandomSeeds=1500000
+strdef Positioning
+Positioning=""
+PrintVoltage=1
+PrintTerminal=1
+PrintConnDetails=0
+PrintCellPositions=1
+PrintConnSummary=1
+TransverseLength=1000
+LongitudinalLength=6000
+strdef LayerHeights
+LayerHeights="4;100;50;200;100;"
+SpatialResolution=100
+ConnData=210
+SynData=116
+NumData=109
+TemporalResolution=0.05
+NumTraces=40
+FracTraces=100
+DegreeStim=1.81
+Onint=0.215
+Offint=0.125
+PercentCellDeath=0
+PercentAxonSprouting=0
+RipStim=0.38
+CatFlag=1
+RandomSeedsConn=1500000
+RandomSeedsStim=1500000
+AxConVel=0
+StepBy=100
+JobHours=12
+EstWriteTime=660
+{load_file("./superdeep.hoc")}

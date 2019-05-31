@@ -1,0 +1,9 @@
+8
+supercell ca3cell 0.900000 2.600000 0.000000      
+supercell pvbasketcell 0.240000 4.500000 -75.000000      
+pvbasketcell ca3cell 0.500000 3.000000 0.000000 NaN NaN NaN NaN NaN NaN
+pvbasketcell supercell 0.900000 3.100000 0.000000 NaN NaN NaN NaN NaN NaN
+pvbasketcell deepcell 0.900000 3.100000 0.000000 NaN NaN NaN NaN NaN NaN
+pvbasketcell pvbasketcell 0.287000 2.670000 -70.000000 NaN NaN NaN NaN NaN NaN
+deepcell ca3cell 0.660000 1.800000 0.000000      
+deepcell pvbasketcell 0.240000 4.500000 -75.000000      

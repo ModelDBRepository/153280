@@ -1,0 +1,60 @@
+objref LayerVector, strobj
+strdef cmdstr, layers, tmpstr
+
+proc SetOtherParameters() {local ind, i, layernum, tempheight
+	strobj = new StringFunctions()
+	tmpstr = LayerHeights
+	ind = strobj.substr(tmpstr,";")
+	layers = tmpstr
+	strobj.left(layers, ind)
+	sscanf(layers,"%g", &layernum)
+	{sprint(cmdstr, "LayerVector=new Vector(%g)",  layernum)} // List of Zo (starting height) values, 1 for each layer
+	{execute1(cmdstr)}
+	
+	for i=0, layernum-1 {
+		strobj.right(tmpstr, ind+1)
+		ind = strobj.substr(tmpstr,";")
+		layers = tmpstr
+		strobj.left(layers, ind)
+		sscanf(layers,"%g", &tempheight)
+		LayerVector.x[i] = tempheight
+	}
+
+	axconvel = 250	// axonal conduction velocity in microns/ms (Bartos et al. 2002)
+
+	tstart = 0		// Start time of simulation
+	
+	tstop = SimDuration	// End time of simulation
+	
+	dt = TemporalResolution		// Integration interval for fadvance (see NEURON reference)
+	
+	secondorder = 2	// A global variable which specifies the time integration method
+					// 	(see NEURON reference)
+					
+	v_init = -60	// All voltages of all sections are initialized to this voltage (mV)
+	
+	N = 1			// Specifies step resolution (see NEURON reference for steps_per_ms),
+					// 	sometimes 1, sometimes 4
+
+	steps_per_ms = 1*N/(dt)		// Controls the intervals at which points are plotted
+	
+	noise_random_stream_offset_ = (tstop - tstart)/dt + 1	// Each noise generator picks a number every
+															// 	dt for the full time range, so stream
+															// 	sections must be at least this long to
+															// 	prevent overlap
+															
+	OK2executeSysCmds = 1 	// If you don't like the NEURON code to make new directories, concatenate files,
+							//  or delete files, set this parameter to 0. Watch out though, if this is set to
+							//  0, the code will use whatever RunName you supply or 'none' if you do not
+							//  supply a RunName. This means:
+							//  - the program will expect a directory named 'RunName' to be in the results directory
+							//  - the program will overwrite any existing files in the ./results/RunName directory
+							
+	if (OK2executeSysCmds==0) {
+		CatFlag = 0			// Overwrite the CatFlag if necessary. If it is specified that executing system commands
+							//  is *not* okay, we definitely do not want CatFlag to be 1 (do not allow concatenating
+							//  results files)
+	}
+	
+}	
+SetOtherParameters()

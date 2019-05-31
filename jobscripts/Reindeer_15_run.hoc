@@ -1,0 +1,43 @@
+strdef RunName
+RunName="Reindeer_15"
+strdef UID
+UID="67DCCEDB-BA81-496B-9831-8619A4B46E5"
+strdef Stimulation
+Stimulation="spontaneous"
+strdef Connectivity
+Connectivity="try_all_repeatstim"
+Scale=1
+SimDuration=5000
+RandomSeeds=500000
+strdef Positioning
+Positioning=""
+PrintVoltage=1
+PrintTerminal=1
+PrintConnDetails=0
+PrintCellPositions=1
+PrintConnSummary=1
+TransverseLength=1000
+LongitudinalLength=6000
+strdef LayerHeights
+LayerHeights="4;100;50;200;100;"
+SpatialResolution=100
+ConnData=207
+SynData=116
+NumData=109
+TemporalResolution=0.05
+NumTraces=40
+FracTraces=100
+DegreeStim=1.81
+Onint=0.215
+Offint=0.125
+PercentCellDeath=0
+PercentAxonSprouting=0
+RipStim=0.38
+CatFlag=1
+RandomSeedsConn=500000
+RandomSeedsStim=500000
+AxConVel=0
+StepBy=100
+JobHours=12
+EstWriteTime=660
+{load_file("./superdeep.hoc")}
