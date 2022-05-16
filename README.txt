@@ -58,3 +58,6 @@ For more information about this code, see:
 - Lab website: http://www.ivansolteszlab.org/models/superdeep.html
 
 *************************************************
+
+Note: Some mod files were updated for compatibility between NEURON 9.0.0
+and legacy versions.
