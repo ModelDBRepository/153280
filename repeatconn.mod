@@ -82,7 +82,7 @@ NEURON {
 }
 
 VERBATIM
-#ifndef NRN_VERSION_GT_8_2_0
+#ifndef NRN_VERSION_GTEQ_8_2_0
 #include <stdint.h>
 extern uint32_t nrnRan4int(uint32_t* idx1, uint32_t idx2);
 extern double* vector_vec();
@@ -351,7 +351,7 @@ static double repeatconn (void* vv) {
 					// which may be less than the desired number (and
 					// hence the size of the array)
 	x [1] = (double)maxidx1;
-	return (double)repeatfinal;
+	return repeatfinal;
 }
 ENDVERBATIM
 
