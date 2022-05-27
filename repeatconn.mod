@@ -82,9 +82,13 @@ NEURON {
 }
 
 VERBATIM
+#ifndef NRN_VERSION_GTEQ_8_2_0
+#include <stdint.h>
+extern uint32_t nrnRan4int(uint32_t* idx1, uint32_t idx2);
 extern double* vector_vec();
 extern int vector_capacity();
 extern void* vector_arg();
+#endif
 //void srand(unsigned seed);
 ENDVERBATIM
 
@@ -116,7 +120,7 @@ static double get_z_pos (int gid, int gmin, int BinNumZ, int binSizeZ, int ZHeig
 	return pos;
 }
 
-static int repeatconn (void* vv) {
+static double repeatconn (void* vv) {
   int repeatfinal, ny, nz, num_pre, num_post, gmin, gmax, maxd, steps, myflaggy, myi, postgmin, stepover;
   double *x, *y, *z, a, b, c, nconv, ncell;
 

@@ -58,3 +58,7 @@ For more information about this code, see:
 - Lab website: http://www.ivansolteszlab.org/models/superdeep.html
 
 *************************************************
+
+Changelog:
+2022-05: Updated MOD files to contain valid C++ and be compatible with
+         the upcoming versions 8.2 and 9.0 of NEURON.
